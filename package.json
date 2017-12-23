@@ -1,6 +1,6 @@
 {
   "name": "js-option",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "JS Optional monad inspired by Scala's Option",
   "main": "lib/index.js",
   "scripts": {

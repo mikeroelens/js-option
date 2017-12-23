@@ -126,7 +126,7 @@ export class None<T> implements Option<T> {
 }
 export const none: None<any> = Object.freeze(new None())
 
-export function option<T>(value: ?T): Option<T> {
+export function opt<T>(value: ?T): Option<T> {
   if (value === null || typeof value === 'undefined') {
     return none
   }
