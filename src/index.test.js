@@ -1,68 +1,68 @@
 // @flow
 
-import { option, none, Some, None, type Option } from './'
+import { opt, none, Some, None, flattenList, type Option } from './'
 
 test('valid values', () => {
-  const x: Option<*> = option(1)
+  const x: Option<*> = opt(1)
   expect(x.isDefined()).toBe(true)
   expect(x.isEmpty()).toBe(false)
-  const y = option(0)
+  const y = opt(0)
   expect(y.isDefined()).toBe(true)
   expect(y.isEmpty()).toBe(false)
-  const z = option({})
+  const z = opt({})
   expect(z.isDefined()).toBe(true)
   expect(z.isEmpty()).toBe(false)
 })
 
 test('empty values', () => {
-  const x = option(null)
+  const x = opt(null)
   expect(x.isEmpty()).toBe(true)
   expect(x.isDefined()).toBe(false)
-  const y = option(undefined)
+  const y = opt(undefined)
   expect(y.isEmpty()).toBe(true)
   expect(y.isDefined()).toBe(false)
 })
 
 test('extract value with get()', () => {
-  const m = option('some value')
+  const m = opt('some value')
   expect(m.get()).toBe('some value')
 })
 
 test('get() should throw on an empty value', () => {
-  const n = option(null)
+  const n = opt(null)
   expect(n.get).toThrow()
 })
 
 test('getOrElse', () => {
-  const x = option(null)
+  const x = opt(null)
   const orValue = x.getOrElse('hi')
   expect(orValue).toBe('hi')
-  const y = option('hello')
+  const y = opt('hello')
   expect(y.getOrElse('hi')).toBe('hello')
 })
 
 test('map value', () => {
-  const x = option('bob')
+  const x = opt('bob')
   const result = x.map(v => v.toUpperCase())
-  expect(result).toEqual(option('BOB'))
+  expect(result).toEqual(opt('BOB'))
   const value = result.get()
   expect(value).toBe('BOB')
 })
 
 test('map empty value is noop', () => {
-  const n = option(null)
+  const n = opt(null)
   const result = n.map(v => v.toUpperCase())
   expect(result).toEqual(none)
 })
 
 test('chaining', () => {
-  const a = option('Maybe  ')
+  const a = opt('Maybe  ')
   const b = a.map(v => v.trim()).map(v => v.toUpperCase()).get()
   expect(b).toBe('MAYBE')
 })
 
 test('flatMap', () => {
-  const a = option('hi')
+  const a = opt('hi')
   const result = a.flatMap((v: string): Option<string> => {
     if (v === 'hi') {
       return new Some('world')
@@ -82,7 +82,7 @@ test('get() throws on empty values', () => {
 })
 
 test('filter() to return just', () => {
-  const name = option('alex  ')
+  const name = opt('alex  ')
   const upper = name
     .map(v => v.trim())
     .filter(v => v.length !== 0)
@@ -91,7 +91,7 @@ test('filter() to return just', () => {
 })
 
 test('filter() to return none', () => {
-  const name = option('  ')
+  const name = opt('  ')
   const upper = name
     .map(v => v.trim())
     .filter(v => v.length !== 0)
@@ -127,4 +127,9 @@ describe('exists', () => {
   })
 })
 
+test('flattenList() to flatten', () => {
+  const list = [new Some('a'), new None(), new Some('b'), new Some('c'), new None()]
+  const flattened = flattenList(list)
+  expect(flattened).toEqual(['a', 'b', 'c'])
+})
 // TODO: Add more tests. https://github.com/kengorab/optionals/blob/master/test/match.spec.js

@@ -1,0 +1,18 @@
+image: node:8.9.3
+
+variables:
+  NODE_ENV: 'production'
+
+stages:
+    - main
+
+test_and_build:
+    stage: main
+    script:
+        - curl -o- -L https://yarnpkg.com/install.sh | bash
+        - export PATH=$HOME/.yarn/bin:$PATH
+        - yarn install --production=false # Need dev dependencies for linting + testing
+        - yarn lint
+        - yarn flow
+        - yarn test
+        - yarn build

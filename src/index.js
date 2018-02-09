@@ -133,3 +133,14 @@ export function opt<T>(value: ?T): Option<T> {
 
   return new Some(value)
 }
+
+export function flattenList<T>(list: Option<T>[]): T[] {
+  return list.reduce(
+    (acc, elem) =>
+      elem.match({
+        none: () => acc,
+        some: e => [...acc, e],
+      }),
+    [],
+  )
+}
